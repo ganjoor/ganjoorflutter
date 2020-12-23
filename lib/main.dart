@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:ganjoorflutter/homepage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:universal_html/html.dart';
 
 void main() {
   runApp(GanjoorApp());
 }
 
-class GanjoorApp extends StatelessWidget {
-  // This widget is the root of your application.
+class GanjoorApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _GanjoorAppState();
+}
+
+class _GanjoorAppState extends State<GanjoorApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (kIsWeb) {
+      // Remove `loading` div
+      final loader = document.getElementsByClassName('loading');
+      if (loader.isNotEmpty) {
+        loader.first.remove();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
