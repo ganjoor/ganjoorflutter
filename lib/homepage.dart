@@ -65,14 +65,16 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
             runSpacing: 8.0, // gap between lines
             children: _poets
                 .map((poet) => Column(children: [
-                      Image.network(
-                        'https://i.ganjoor.net/android/img/' +
-                            poet.id.toString() +
-                            '.png',
-                        width: 82,
-                        height: 100,
+                      FlatButton(
+                        onPressed: () {}, // handle your image tap here
+                        child: Image(
+                          image: AssetImage(
+                              'images/poets/' + poet.id.toString() + '.png'),
+                          width: 82,
+                          height: 100,
+                        ),
                       ),
-                      Text(poet.name)
+                      FlatButton(onPressed: () {}, child: Text(poet.name)),
                     ]))
                 .toList(),
           ),
