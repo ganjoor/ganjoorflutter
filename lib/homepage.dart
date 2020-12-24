@@ -101,11 +101,29 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 Text(_poet.poet.description),
                 Column(
                     children: _poet.cat.children
-                        .map((cat) => Text(cat.title))
+                        .map(
+                          (cat) => FlatButton(
+                              child: Text(
+                                cat.title,
+                                style: Theme.of(context)
+                                    .primaryTextTheme
+                                    .bodyText1
+                                    .copyWith(
+                                        color: Theme.of(context).primaryColor),
+                              ),
+                              onPressed: () {}),
+                        )
                         .toList()),
                 Column(
                   children: _poet.cat.poems
-                      .map((poem) => Text(poem.title + ': ' + poem.excerpt))
+                      .map((poem) => FlatButton(
+                          child: Text(poem.title + ': ' + poem.excerpt,
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      color: Theme.of(context).primaryColor)),
+                          onPressed: () {}))
                       .toList(),
                 )
               ],
