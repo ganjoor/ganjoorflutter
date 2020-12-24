@@ -340,8 +340,9 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                   tooltip: 'خانه',
                   onPressed: () {
                     setState(() {
-                      _poet = null;
+                      _poem = null;
                       _cat = null;
+                      _poet = null;
                     });
                   },
                 ),
