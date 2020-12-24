@@ -127,10 +127,20 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
             isLoading: _isLoading,
             child: Scaffold(
               appBar: AppBar(
-                // Here we take the value from the MyHomePage object that was created by
-                // the App.build method, and use it to set our appbar title.
-                title: Text('گنجور'),
-              ),
+                  // Here we take the value from the MyHomePage object that was created by
+                  // the App.build method, and use it to set our appbar title.
+                  title: Row(children: [
+                IconButton(
+                  icon: Icon(Icons.home),
+                  tooltip: 'خانه',
+                  onPressed: () {
+                    setState(() {
+                      _poet = null;
+                    });
+                  },
+                ),
+                Text('گنجور')
+              ])),
               body: Center(
                 child: SingleChildScrollView(
                   // Center is a layout widget. It takes a single child and positions it
