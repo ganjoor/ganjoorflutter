@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
       ));
     } else {
       setState(() {
+        _cat = res.item1.category;
         _poem = res.item1;
       });
     }
@@ -132,6 +133,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                   onPressed: () async {
                     if (_poet.cat.id == parent.id) {
                       setState(() {
+                        _poem = null;
                         _cat = null;
                       });
                     } else {
@@ -150,7 +152,16 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 .bodyText1
                 .copyWith(color: Theme.of(context).primaryColor),
           ),
-          onPressed: () => null)
+          onPressed: () => () async {
+                if (_poet.cat.id == _cat.cat.id) {
+                  setState(() {
+                    _poem = null;
+                    _cat = null;
+                  });
+                } else {
+                  await _loadCat(_cat.cat.id);
+                }
+              })
     ]));
     return parents;
   }
@@ -276,7 +287,9 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                                           .copyWith(
                                               color: Theme.of(context)
                                                   .primaryColor)),
-                                  onPressed: () {}))
+                                  onPressed: () async {
+                                    await _loadPoem(poem.id);
+                                  }))
                               .toList(),
                         )
                       ],
