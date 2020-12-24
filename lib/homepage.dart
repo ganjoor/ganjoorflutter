@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
+import 'models/ganjoor/GanjoorPoetCompleteViewModel.dart';
 import 'models/ganjoor/GanjoorPoetViewModel.dart';
 import 'services/ganjoor-service.dart';
 
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   bool _isLoading = false;
 
   List<GanjoorPoetViewModel> _poets = [];
+  GanjoorPoetCompleteViewModel _poet;
 
   Future _loadPoets() async {
     setState(() {
@@ -45,6 +47,70 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
         _poets = res.item1;
       });
     }
+  }
+
+  Future _loadPoet(int id) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var res = await GanjoorService().getPoetById(id);
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res.item2.isNotEmpty) {
+      _key.currentState.showSnackBar(SnackBar(
+        content: Text("خطا در دریافت اطلاعات شاعر: " + res.item2),
+        backgroundColor: Colors.red,
+      ));
+    } else {
+      setState(() {
+        _poet = res.item1;
+      });
+    }
+  }
+
+  List<Widget> get _contents {
+    return _poet == null
+        ? _poets
+            .map((poet) => Column(children: [
+                  FlatButton(
+                    onPressed: () async {
+                      _loadPoet(poet.id);
+                    }, // handle your image tap here
+                    child: Image(
+                      image: AssetImage(
+                          'images/poets/' + poet.id.toString() + '.png'),
+                      width: 82,
+                      height: 100,
+                    ),
+                  ),
+                  FlatButton(onPressed: () {}, child: Text(poet.name)),
+                ]))
+            .toList()
+        : [
+            Column(
+              children: [
+                Image(
+                  image: AssetImage(
+                      'images/poets/' + _poet.poet.id.toString() + '.png'),
+                  width: 82,
+                  height: 100,
+                ),
+                Text(_poet.poet.name),
+                Text(_poet.poet.description),
+                Column(
+                    children: _poet.cat.children
+                        .map((cat) => Text(cat.title))
+                        .toList()),
+                Column(
+                  children: _poet.cat.poems
+                      .map((poem) => Text(poem.title + ': ' + poem.excerpt))
+                      .toList(),
+                )
+              ],
+            )
+          ];
   }
 
   @override
@@ -86,22 +152,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                     // horizontal).
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 8.0, // gap between lines
-                    children: _poets
-                        .map((poet) => Column(children: [
-                              FlatButton(
-                                onPressed: () {}, // handle your image tap here
-                                child: Image(
-                                  image: AssetImage('images/poets/' +
-                                      poet.id.toString() +
-                                      '.png'),
-                                  width: 82,
-                                  height: 100,
-                                ),
-                              ),
-                              FlatButton(
-                                  onPressed: () {}, child: Text(poet.name)),
-                            ]))
-                        .toList(),
+                    children: _contents,
                   ),
                 ),
               ),

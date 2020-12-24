@@ -25,15 +25,21 @@ class GanjoorCatViewModel {
       id: json['id'],
       title: json['title'],
       urlSlug: json['urlSlug'],
-      ancestors: (json['ancestors'] as List)
-          .map((i) => GanjoorCatViewModel.fromJson(i))
-          .toList(),
-      children: (json['children'] as List)
-          .map((i) => GanjoorCatViewModel.fromJson(i))
-          .toList(),
-      poems: (json['poems'] as List)
-          .map((i) => GanjoorPoemSummaryViewModel.fromJson(i))
-          .toList(),
+      ancestors: json['ancestors'] == null
+          ? []
+          : (json['ancestors'] as List)
+              .map((i) => GanjoorCatViewModel.fromJson(i))
+              .toList(),
+      children: json['children'] == null
+          ? []
+          : (json['children'] as List)
+              .map((i) => GanjoorCatViewModel.fromJson(i))
+              .toList(),
+      poems: json['poems'] == null
+          ? []
+          : (json['poems'] as List)
+              .map((i) => GanjoorPoemSummaryViewModel.fromJson(i))
+              .toList(),
     );
   }
 }

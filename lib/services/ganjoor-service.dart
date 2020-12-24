@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ganjoorflutter/models/ganjoor/GanjoorPoemCompleteViewModel.dart';
+import 'package:ganjoorflutter/models/ganjoor/GanjoorPoetCompleteViewModel.dart';
 import 'package:ganjoorflutter/models/ganjoor/GanjoorPoetViewModel.dart';
 import 'package:ganjoorflutter/models/recitation/recitation-verse-sync.dart';
 import 'package:http/http.dart' as http;
@@ -35,6 +36,35 @@ class GanjoorService {
       }
     } catch (e) {
       return Tuple2<List<GanjoorPoetViewModel>, String>(
+          null,
+          'سرور مشخص شده در تنظیمات در دسترس نیست.\u200Fجزئیات بیشتر: ' +
+              e.toString());
+    }
+  }
+
+  Future<Tuple2<GanjoorPoetCompleteViewModel, String>> getPoetById(
+      int id) async {
+    try {
+      var apiRoot = GServiceAddress.Url;
+      http.Response response =
+          await http.get('$apiRoot/api/ganjoor/poet/$id', headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      if (response.statusCode == 200) {
+        return Tuple2<GanjoorPoetCompleteViewModel, String>(
+            GanjoorPoetCompleteViewModel.fromJson(json.decode(response.body)),
+            '');
+      } else {
+        return Tuple2<GanjoorPoetCompleteViewModel, String>(
+            null,
+            'کد برگشتی: ' +
+                response.statusCode.toString() +
+                ' ' +
+                response.body);
+      }
+    } catch (e) {
+      return Tuple2<GanjoorPoetCompleteViewModel, String>(
           null,
           'سرور مشخص شده در تنظیمات در دسترس نیست.\u200Fجزئیات بیشتر: ' +
               e.toString());
