@@ -100,6 +100,35 @@ class GanjoorService {
     }
   }
 
+  Future<Tuple2<GanjoorPoemCompleteViewModel, String>> getPoemById(
+      int id) async {
+    try {
+      var apiRoot = GServiceAddress.Url;
+      http.Response response =
+          await http.get('$apiRoot/api/ganjoor/poem/$id', headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      if (response.statusCode == 200) {
+        return Tuple2<GanjoorPoemCompleteViewModel, String>(
+            GanjoorPoemCompleteViewModel.fromJson(json.decode(response.body)),
+            '');
+      } else {
+        return Tuple2<GanjoorPoemCompleteViewModel, String>(
+            null,
+            'کد برگشتی: ' +
+                response.statusCode.toString() +
+                ' ' +
+                response.body);
+      }
+    } catch (e) {
+      return Tuple2<GanjoorPoemCompleteViewModel, String>(
+          null,
+          'سرور مشخص شده در تنظیمات در دسترس نیست.\u200Fجزئیات بیشتر: ' +
+              e.toString());
+    }
+  }
+
   Future<Tuple2<GanjoorPoemCompleteViewModel, String>> faal() async {
     try {
       var apiRoot = GServiceAddress.Url;

@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
+import 'models/ganjoor/GanjoorPoemCompleteViewModel.dart';
 import 'models/ganjoor/GanjoorPoetCompleteViewModel.dart';
 import 'models/ganjoor/GanjoorPoetViewModel.dart';
 import 'services/ganjoor-service.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   List<GanjoorPoetViewModel> _poets = [];
   GanjoorPoetCompleteViewModel _poet;
   GanjoorPoetCompleteViewModel _cat;
+  GanjoorPoemCompleteViewModel _poem;
 
   Future _loadPoets() async {
     setState(() {
@@ -68,6 +70,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
       setState(() {
         _poet = res.item1;
         _cat = null;
+        _poem = null;
       });
     }
   }
@@ -89,6 +92,28 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     } else {
       setState(() {
         _cat = res.item1;
+        _poem = null;
+      });
+    }
+  }
+
+  Future _loadPoem(int id) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var res = await GanjoorService().getPoemById(id);
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res.item2.isNotEmpty) {
+      _key.currentState.showSnackBar(SnackBar(
+        content: Text("خطا در دریافت اطلاعات بخش: " + res.item2),
+        backgroundColor: Colors.red,
+      ));
+    } else {
+      setState(() {
+        _poem = res.item1;
       });
     }
   }
@@ -131,10 +156,15 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   List<Widget> get _contents {
-    return _cat != null
+    return _poem != null
         ? [
             Column(
               children: [
+                Text(_poem.title,
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).primaryColor)),
                 Image(
                   image: AssetImage(
                       'images/poets/' + _cat.poet.id.toString() + '.png'),
@@ -145,55 +175,27 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _hierarchy),
                 Column(
-                    children: _cat.cat.children
-                        .map(
-                          (cat) => TextButton(
-                              child: Text(
-                                cat.title,
-                                style: Theme.of(context)
-                                    .primaryTextTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        color: Theme.of(context).primaryColor),
-                              ),
-                              onPressed: () async {
-                                await _loadCat(cat.id);
-                              }),
-                        )
-                        .toList()),
-                Column(
-                  children: _cat.cat.poems
-                      .map((poem) => TextButton(
-                          child: Text(poem.title + ': ' + poem.excerpt,
-                              style: Theme.of(context)
-                                  .primaryTextTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).primaryColor)),
-                          onPressed: () {}))
-                      .toList(),
+                  children:
+                      _poem.verses.map((verse) => Text(verse.text)).toList(),
                 )
               ],
             )
           ]
-        : _poet != null
+        : _cat != null
             ? [
                 Column(
                   children: [
                     Image(
                       image: AssetImage(
-                          'images/poets/' + _poet.poet.id.toString() + '.png'),
+                          'images/poets/' + _cat.poet.id.toString() + '.png'),
                       width: 82,
                       height: 100,
                     ),
-                    Text(_poet.poet.name,
-                        style: Theme.of(context)
-                            .primaryTextTheme
-                            .bodyText1
-                            .copyWith(color: Theme.of(context).primaryColor)),
-                    Text(_poet.poet.description),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _hierarchy),
                     Column(
-                        children: _poet.cat.children
+                        children: _cat.cat.children
                             .map(
                               (cat) => TextButton(
                                   child: Text(
@@ -211,7 +213,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                             )
                             .toList()),
                     Column(
-                      children: _poet.cat.poems
+                      children: _cat.cat.poems
                           .map((poem) => TextButton(
                               child: Text(poem.title + ': ' + poem.excerpt,
                                   style: Theme.of(context)
@@ -220,32 +222,87 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                                       .copyWith(
                                           color:
                                               Theme.of(context).primaryColor)),
-                              onPressed: () {}))
+                              onPressed: () async {
+                                await _loadPoem(poem.id);
+                              }))
                           .toList(),
                     )
                   ],
                 )
               ]
-            : _poets
-                .map((poet) => Column(children: [
-                      TextButton(
-                        onPressed: () async {
-                          _loadPoet(poet.id);
-                        }, // handle your image tap here
-                        child: Image(
-                          image: AssetImage(
-                              'images/poets/' + poet.id.toString() + '.png'),
+            : _poet != null
+                ? [
+                    Column(
+                      children: [
+                        Image(
+                          image: AssetImage('images/poets/' +
+                              _poet.poet.id.toString() +
+                              '.png'),
                           width: 82,
                           height: 100,
                         ),
-                      ),
-                      TextButton(
-                          onPressed: () async {
-                            _loadPoet(poet.id);
-                          },
-                          child: Text(poet.name)),
-                    ]))
-                .toList();
+                        Text(_poet.poet.name,
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyText1
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor)),
+                        Text(_poet.poet.description),
+                        Column(
+                            children: _poet.cat.children
+                                .map(
+                                  (cat) => TextButton(
+                                      child: Text(
+                                        cat.title,
+                                        style: Theme.of(context)
+                                            .primaryTextTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                      ),
+                                      onPressed: () async {
+                                        await _loadCat(cat.id);
+                                      }),
+                                )
+                                .toList()),
+                        Column(
+                          children: _poet.cat.poems
+                              .map((poem) => TextButton(
+                                  child: Text(poem.title + ': ' + poem.excerpt,
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .bodyText1
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                  onPressed: () {}))
+                              .toList(),
+                        )
+                      ],
+                    )
+                  ]
+                : _poets
+                    .map((poet) => Column(children: [
+                          TextButton(
+                            onPressed: () async {
+                              _loadPoet(poet.id);
+                            }, // handle your image tap here
+                            child: Image(
+                              image: AssetImage('images/poets/' +
+                                  poet.id.toString() +
+                                  '.png'),
+                              width: 82,
+                              height: 100,
+                            ),
+                          ),
+                          TextButton(
+                              onPressed: () async {
+                                _loadPoet(poet.id);
+                              },
+                              child: Text(poet.name)),
+                        ]))
+                    .toList();
   }
 
   @override
