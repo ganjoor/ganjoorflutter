@@ -12,10 +12,21 @@ class GanjoorPoemSummaryViewModel {
       return null;
     }
 
+    String excerpt = json['excerpt'];
+    if (excerpt.length > 100) {
+      excerpt = excerpt.substring(0, 100);
+      int n = excerpt.lastIndexOf(' ');
+      if (n >= 0) {
+        excerpt = excerpt.substring(0, n) + ' ...';
+      } else {
+        excerpt += '...';
+      }
+    }
+
     return GanjoorPoemSummaryViewModel(
         id: json['id'],
         title: json['title'],
         urlSlug: json['urlSlug'],
-        excerpt: json['excerpt']);
+        excerpt: excerpt);
   }
 }
