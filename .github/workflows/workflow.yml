@@ -7,12 +7,17 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: beta
+  
     - run: flutter config --enable-web
+    - name: Flutter Preparation
+    - working-directory: ./ganjoorflutter
     - run: flutter pub get
+    - name: Flutter Build
+    - working-directory: ./ganjoorflutter
     - run: flutter build web    
     - name: Deploy
       run: |
-        cd build/web
+        cd ganjoorflutter/build/web
         git init
         git config user.name  "CI"
         git config user.email "flutter-ci@github.com"
