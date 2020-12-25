@@ -1,6 +1,8 @@
 name: Flutter Web
-on: [push]jobs:
-  build:runs-on: ubuntu-latest
+on: [push]
+jobs:
+  build:
+runs-on: ubuntu-latest
         
     steps:
     - uses: actions/checkout@v1
@@ -28,8 +30,8 @@ on: [push]jobs:
         cd example/build/web
         git init
         git config user.name  "CI"
-        git config user.email "mohammadi.hr@gmail.com"
-        git remote add secure-origin https://${{ secrets.ACCESS_TOKEN }}@github.com/hrmoh/ganjoorflutter.git
+        git config user.email "flutter-ci@github.com"
+        git remote add secure-origin https://${{ secrets.ACCESS_TOKEN }}@github.com/ganjoor/ganjoorflutter.git
         git checkout -b gh-pages
         git add .
         git commit -m "Updated docs"
