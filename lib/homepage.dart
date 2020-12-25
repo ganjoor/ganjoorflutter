@@ -273,6 +273,46 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                                 await _loadPoem(poem.id);
                               }))
                           .toList(),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: TextButton(
+                                child: Text(
+                                  _cat.cat.previous == null
+                                      ? ''
+                                      : _cat.cat.previous.title,
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                ),
+                                onPressed: _cat.cat.previous == null
+                                    ? null
+                                    : () async {
+                                        await _loadCat(_cat.cat.previous.id);
+                                      })),
+                        Expanded(
+                            child: TextButton(
+                                child: Text(
+                                  _cat.cat.next == null
+                                      ? ''
+                                      : _cat.cat.next.title,
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                ),
+                                onPressed: _cat.cat.next == null
+                                    ? null
+                                    : () async {
+                                        await _loadCat(_cat.cat.next.id);
+                                      }))
+                      ],
                     )
                   ],
                 )

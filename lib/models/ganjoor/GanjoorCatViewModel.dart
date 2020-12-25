@@ -4,6 +4,8 @@ class GanjoorCatViewModel {
   final int id;
   final String title;
   final String urlSlug;
+  final GanjoorCatViewModel next;
+  final GanjoorCatViewModel previous;
   final List<GanjoorCatViewModel> ancestors;
   final List<GanjoorCatViewModel> children;
   final List<GanjoorPoemSummaryViewModel> poems;
@@ -12,6 +14,8 @@ class GanjoorCatViewModel {
       {this.id,
       this.title,
       this.urlSlug,
+      this.next,
+      this.previous,
       this.ancestors,
       this.children,
       this.poems});
@@ -25,6 +29,12 @@ class GanjoorCatViewModel {
       id: json['id'],
       title: json['title'],
       urlSlug: json['urlSlug'],
+      next: json['next'] == null
+          ? null
+          : GanjoorCatViewModel.fromJson(json['next']),
+      previous: json['previous'] == null
+          ? null
+          : GanjoorCatViewModel.fromJson(json['previous']),
       ancestors: json['ancestors'] == null
           ? []
           : (json['ancestors'] as List)
