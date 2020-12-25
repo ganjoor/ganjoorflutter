@@ -14,3 +14,25 @@ jobs:
         with:
           channel: 'beta'
       - uses: erickzanardo/flutter-gh-pages@v2
+      - name: Upgrades flutter
+        run: flutter upgrade
+      - name: Enable Web
+        run: flutter config --enable-web
+        working-directory: ./
+      - name: Install dependencies
+        run: flutter packages get
+        working-directory: ./
+      - name: Build Web
+        run: flutter build web
+        working-directory: ./
+      - name: Deploy
+        run: |
+          cd build/web
+          git init
+          git config user.name  "CI"
+          git config user.email "mohammadi.hr@gmail.com"
+          git remote add secure-origin https://${{ secrets.ACCESS_TOKEN }}@github.com/ganjoor/anjoorflutter.git
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Updated docs"
+          git push --force secure-origin gh-pages
