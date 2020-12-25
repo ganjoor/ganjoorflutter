@@ -188,6 +188,42 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 Column(
                   children:
                       _poem.verses.map((verse) => Text(verse.text)).toList(),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: TextButton(
+                            child: Text(
+                              _poem.previous == null
+                                  ? ''
+                                  : _poem.previous.title,
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                            onPressed: _poem.previous == null
+                                ? null
+                                : () async {
+                                    await _loadPoem(_poem.previous.id);
+                                  })),
+                    Expanded(
+                        child: TextButton(
+                            child: Text(
+                              _poem.next == null ? '' : _poem.next.title,
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                            onPressed: _poem.next == null
+                                ? null
+                                : () async {
+                                    await _loadPoem(_poem.next.id);
+                                  }))
+                  ],
                 )
               ],
             )

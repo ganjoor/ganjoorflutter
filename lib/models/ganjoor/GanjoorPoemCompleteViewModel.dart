@@ -1,5 +1,6 @@
 import 'package:ganjoorflutter/models/recitation/PublicRecitationViewModel.dart';
 
+import 'GanjoorPoemSummaryViewModel.dart';
 import 'GanjoorPoetCompleteViewModel.dart';
 import 'GanjoorVerseViewModel.dart';
 
@@ -11,6 +12,8 @@ class GanjoorPoemCompleteViewModel {
   final String fullUrl;
   final String plainText;
   final String htmlText;
+  final GanjoorPoemSummaryViewModel next;
+  final GanjoorPoemSummaryViewModel previous;
   final GanjoorPoetCompleteViewModel category;
   final List<PublicRecitationViewModel> recitations;
   final List<GanjoorVerseViewModel> verses;
@@ -23,6 +26,8 @@ class GanjoorPoemCompleteViewModel {
       this.fullUrl,
       this.plainText,
       this.htmlText,
+      this.next,
+      this.previous,
       this.category,
       this.recitations,
       this.verses});
@@ -40,6 +45,12 @@ class GanjoorPoemCompleteViewModel {
         fullUrl: json['fullUrl'],
         plainText: json['plainText'],
         htmlText: json['htmlText'],
+        next: json['next'] == null
+            ? null
+            : GanjoorPoemSummaryViewModel.fromJson(json['next']),
+        previous: json['previous'] == null
+            ? null
+            : GanjoorPoemSummaryViewModel.fromJson(json['previous']),
         category: json['category'] == null
             ? null
             : GanjoorPoetCompleteViewModel.fromJson(json['category']),
