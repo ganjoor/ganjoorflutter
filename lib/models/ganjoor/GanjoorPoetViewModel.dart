@@ -3,8 +3,10 @@ class GanjoorPoetViewModel {
   final String name;
   final String description;
   final String fullUrl;
+  final int rootCatId;
 
-  GanjoorPoetViewModel({this.id, this.name, this.description, this.fullUrl});
+  GanjoorPoetViewModel(
+      {this.id, this.name, this.description, this.fullUrl, this.rootCatId});
 
   factory GanjoorPoetViewModel.fromJson(Map<String, dynamic> json) {
     if (json == null) {
@@ -15,6 +17,7 @@ class GanjoorPoetViewModel {
         id: json['id'],
         name: json['name'],
         description: json['description'],
-        fullUrl: json['fullUrl']);
+        fullUrl: json['fullUrl'],
+        rootCatId: json['rootCatId']);
   }
 }

@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                         .copyWith(color: Theme.of(context).primaryColor),
                   ),
                   onPressed: () async {
-                    if (_poet.cat.id == parent.id) {
+                    if (_poet.poet.rootCatId == parent.id) {
                       setState(() {
                         _poem = null;
                         _cat = null;
@@ -152,16 +152,16 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 .bodyText1
                 .copyWith(color: Theme.of(context).primaryColor),
           ),
-          onPressed: () => () async {
-                if (_poet.cat.id == _cat.cat.id) {
-                  setState(() {
-                    _poem = null;
-                    _cat = null;
-                  });
-                } else {
-                  await _loadCat(_cat.cat.id);
-                }
-              })
+          onPressed: () async {
+            if (_poet.poet.rootCatId == _cat.cat.id) {
+              setState(() {
+                _poem = null;
+                _cat = null;
+              });
+            } else {
+              await _loadCat(_cat.cat.id);
+            }
+          })
     ]));
     return parents;
   }
