@@ -176,12 +176,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                         .primaryTextTheme
                         .bodyText1
                         .copyWith(color: Theme.of(context).primaryColor)),
-                Image(
-                  image: AssetImage(
-                      'images/poets/' + _cat.poet.id.toString() + '.png'),
-                  width: 82,
-                  height: 100,
-                ),
+                Image.network(_poet.poet.imageUrl),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _hierarchy),
@@ -232,12 +227,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
             ? [
                 Column(
                   children: [
-                    Image(
-                      image: AssetImage(
-                          'images/poets/' + _cat.poet.id.toString() + '.png'),
-                      width: 82,
-                      height: 100,
-                    ),
+                    Image.network(_cat.poet.imageUrl),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: _hierarchy),
@@ -321,13 +311,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 ? [
                     Column(
                       children: [
-                        Image(
-                          image: AssetImage('images/poets/' +
-                              _poet.poet.id.toString() +
-                              '.png'),
-                          width: 82,
-                          height: 100,
-                        ),
+                        Image.network(_poet.poet.imageUrl),
                         Text(_poet.poet.name,
                             style: Theme.of(context)
                                 .primaryTextTheme
@@ -377,13 +361,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                             onPressed: () async {
                               _loadPoet(poet.id);
                             }, // handle your image tap here
-                            child: Image(
-                              image: AssetImage('images/poets/' +
-                                  poet.id.toString() +
-                                  '.png'),
-                              width: 82,
-                              height: 100,
-                            ),
+                            child: Image.network(poet.imageUrl),
                           ),
                           TextButton(
                               onPressed: () async {
